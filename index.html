@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Print Dreams</title>
     <style>
-        /* --- Modern Tech Theme --- */
         :root {
             --bg: #f8f9fa;
             --text: #2d3436;
             --card: #ffffff;
-            --accent: #0984e3; /* Sleek Blue */
+            --accent: #0984e3; 
             --nav-bg: #ffffff;
             --border: 1px solid #dfe6e9;
             --radius: 12px;
-            --shadow: 0 4px 6px rgba(0,0,0,0.05);
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         [data-theme="dark"] {
@@ -24,16 +23,18 @@
             --accent: #74b9ff;
             --nav-bg: #2f3542;
             --border: 1px solid #57606f;
-            --shadow: 0 4px 10px rgba(0,0,0,0.3);
+            --shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            transition: all 0.3s ease;
-            overflow: hidden; /* Locks pages */
+            transition: background 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* --- Navigation --- */
@@ -41,24 +42,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
+            padding: 1rem 5%;
             background: var(--nav-bg);
             border-bottom: var(--border);
-            box-shadow: var(--shadow);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
 
-        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -1px; }
+        .logo { font-weight: 800; font-size: 1.4rem; color: var(--accent); }
 
-        .nav-links { display: flex; gap: 10px; }
+        .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
 
         .nav-links button {
             background: transparent;
-            border: none;
+            border: 1px solid transparent;
             color: var(--text);
-            padding: 8px 16px;
+            padding: 10px 15px;
             cursor: pointer;
             font-weight: 600;
             border-radius: var(--radius);
@@ -68,9 +68,264 @@
         .nav-links button:hover, .nav-links button.active-btn {
             background: var(--accent);
             color: white;
+            border-color: var(--accent);
         }
 
-        /* --- Content Container --- */
+        /* --- Main Content Area (Scrollable) --- */
+        .container {
+            flex: 1;
+            padding: 40px 5%;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+            padding-bottom: 50px; /* Extra space to ensure bottom is scrollable */
+        }
+
+        .page.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- UI Components --- */
+        .card {
+            background: var(--card);
+            border: var(--border);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding-top: 20px;
+        }
+
+        .product-card {
+            background: var(--card);
+            border: var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow); }
+
+        .img-placeholder {
+            width: 100%;
+            aspect-ratio: 1;
+            background: rgba(0,0,0,0.04);
+            border: 2px dashed #bdc3c7;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .btn-action {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: var(--radius);
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: filter 0.2s;
+        }
+
+        .btn-action:hover { filter: brightness(1.1); }
+        .btn-action:active { transform: scale(0.98); }
+
+        .theme-toggle {
+            background: var(--card);
+            border: var(--border);
+            padding: 8px 12px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .cart-badge {
+            background: #ff4757;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">3D PRINT DREAMS</div>
+        <div class="nav-links">
+            <button onclick="showPage('home')" id="btn-home" class="active-btn">Home</button>
+            <button onclick="showPage('shop')" id="btn-shop">Shop</button>
+            <button onclick="showPage('about')" id="btn-about">About</button>
+            <button onclick="showPage('contact')" id="btn-contact">Contact</button>
+            <button onclick="showPage('donate')" id="btn-donate">Donate</button>
+            <button onclick="showPage('cart')" id="btn-cart">Cart <span class="cart-badge" id="cart-count">0</span></button>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    </nav>
+
+    <div class="container">
+        <section id="home" class="page active">
+            <div class="card">
+                <h1>Dreamed in 3D. Printed for You.</h1>
+                <p>Welcome to 3D Print Dreams. We specialize in high-precision fidget toys and custom tech gear.</p>
+                <div class="img-placeholder">Upload Workshop Photo</div>
+            </div>
+        </section>
+
+        <section id="shop" class="page">
+            <h2>The Fidget Shop</h2>
+            <div class="grid">
+                <div class="product-card">
+                    <div class="img-placeholder">Image Placeholder</div>
+                    <div>
+                        <h3>Precision Spinner</h3>
+                        <p>$15.00</p>
+                    </div>
+                    <button class="btn-action" onclick="addToCart('Precision Spinner')">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <div class="img-placeholder">Image Placeholder</div>
+                    <div>
+                        <h3>Mechanical Fidget Cube</h3>
+                        <p>$20.00</p>
+                    </div>
+                    <button class="btn-action" onclick="addToCart('Fidget Cube')">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <div class="img-placeholder">Image Placeholder</div>
+                    <div>
+                        <h3>Articulated Dragon</h3>
+                        <p>$25.00</p>
+                    </div>
+                    <button class="btn-action" onclick="addToCart('Articulated Dragon')">Add to Cart</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="page">
+            <div class="card">
+                <h2>Two Makers, One Vision</h2>
+                <p>3D Print Dreams is run by a dedicated team of two. We handle everything from CAD design to final assembly.</p>
+                <div class="img-placeholder">Our Team Photo</div>
+            </div>
+        </section>
+
+        <section id="contact" class="page">
+            <div class="card">
+                <h2>Contact Us</h2>
+                <p>Questions about an order? Need a custom print?</p>
+                <p><strong>Email:</strong> hello@3dprintdreams.com</p>
+                <div class="img-placeholder" style="height:100px;">Contact Form Coming Soon</div>
+            </div>
+        </section>
+
+        <section id="donate" class="page">
+            <div class="card" style="text-align: center;">
+                <h2>Support Our Lab</h2>
+                <p>Your donations help us buy new filament colors and upgrade our nozzle heads!</p>
+                <button class="btn-action" onclick="simulateDonate()">Donate via PayPal</button>
+            </div>
+        </section>
+
+        <section id="cart" class="page">
+            <div class="card">
+                <h2>Your Shopping Cart</h2>
+                <div id="cart-items">Your cart is currently empty.</div>
+                <hr style="margin: 20px 0; border: none; border-top: var(--border);">
+                <button class="btn-action" id="checkout-btn" disabled onclick="alert('Checkout system coming soon!')">Proceed to Checkout</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let cart = [];
+
+        function showPage(pageId) {
+            // Switch Page Visibility
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+
+            // Update Nav Button Active Style
+            document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active-btn'));
+            document.getElementById('btn-' + pageId).classList.add('active-btn');
+
+            // Scroll to the top of the NEW page automatically
+            window.scrollTo(0, 0);
+        }
+
+        function toggleTheme() {
+            const body = document.documentElement;
+            const current = body.getAttribute('data-theme');
+            body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        }
+
+        function addToCart(itemName) {
+            cart.push(itemName);
+            document.getElementById('cart-count').innerText = cart.length;
+            updateCartDisplay();
+            
+            // Visual feedback that it worked
+            console.log("Added " + itemName + " to cart.");
+        }
+
+        function updateCartDisplay() {
+            const cartDiv = document.getElementById('cart-items');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            
+            if(cart.length > 0) {
+                cartDiv.innerHTML = cart.map((item, index) => 
+                    `<div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span>📦 ${item}</span>
+                        <button onclick="removeItem(${index})" style="background:none; border:none; color:#ff4757; cursor:pointer;">Remove</button>
+                    </div>`
+                ).join('');
+                checkoutBtn.disabled = false;
+            } else {
+                cartDiv.innerHTML = "Your cart is currently empty.";
+                checkoutBtn.disabled = true;
+            }
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            document.getElementById('cart-count').innerText = cart.length;
+            updateCartDisplay();
+        }
+
+        function simulateDonate() {
+            // This replaces the broken PayPal link with a clear action
+            const confirmed = confirm("This would normally redirect to PayPal. Ready to support the lab?");
+            if(confirmed) {
+                window.open('https://www.paypal.com', '_blank');
+            }
+        }
+    </script>
+</body>
+</html>        /* --- Content Container --- */
         .container {
             height: calc(100vh - 70px);
             overflow-y: auto;
