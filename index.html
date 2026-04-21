@@ -3,652 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Print Dreams | Custom Fidgets</title>
+    <title>3D Print Dreams</title>
     <style>
         :root {
-            --primary: #007aff; /* Clean Apple-style Blue */
+            --primary: #007aff;
             --bg: #ffffff;
             --surface: #f5f5f7;
             --text: #1d1d1f;
-            --text-secondary: #86868b;
+            --text-sec: #86868b;
             --border: #d2d2d7;
-            --radius: 14px;
-            --shadow: 0 8px 30px rgba(0,0,0,0.04);
+            --radius: 16px;
         }
 
         [data-theme="dark"] {
             --bg: #000000;
             --surface: #1c1c1e;
             --text: #f5f5f7;
-            --text-secondary: #a1a1a6;
+            --text-sec: #a1a1a6;
             --border: #38383a;
-            --shadow: 0 8px 30px rgba(0,0,0,0.3);
         }
 
-        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, system-ui, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            line-height: 1.5;
-            transition: 0.3s ease;
-        }
-
-        /* --- Navigation --- */
-        nav {
-            position: sticky;
-            top: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 10%;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            z-index: 1000;
-        }
-
-        [data-theme="dark"] nav { background: rgba(0, 0, 0, 0.8); }
-
-        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: -0.5px; }
-
-        .nav-links { display: flex; gap: 15px; }
-
-        .nav-links button {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-
-        .nav-links button:hover, .nav-links button.active-btn {
-            color: var(--primary);
-        }
-
-        /* --- Layout --- */
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 60px 20px;
-        }
-
-        .page { display: none; animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .page.active { display: block; }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- Clean Components --- */
-        .hero { text-align: center; margin-bottom: 80px; }
-        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; letter-spacing: -2px; }
-        .hero p { font-size: 1.4rem; color: var(--text-secondary); }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-
-        .card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 24px;
-            text-align: left;
             transition: 0.3s;
-            border: 1px solid transparent;
+            overflow: hidden; /* Prevent body scroll to keep the layout tight */
         }
 
-        .card:hover { border-color: var(--primary); transform: scale(1.02); }
-
-        .img-box {
-            background: var(--bg);
-            width: 100%;
-            aspect-ratio: 4/3;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
-
-        .btn-main {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.2s;
-        }
-
-        .btn-main:hover { opacity: 0.9; transform: scale(0.98); }
-
-        .theme-toggle {
-            background: var(--surface);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .cart-dot {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 10px;
-            margin-left: 4px;
-        }
-    </style>
-</head>
-<body>
-
-    <nav>
-        <div class="logo">3D PRINT DREAMS</div>
-        <div class="nav-links">
-            <button onclick="showPage('home')" id="btn-home" class="active-btn">Home</button>
-            <button onclick="showPage('shop')" id="btn-shop">Shop</button>
-            <button onclick="showPage('about')" id="btn-about">About</button>
-            <button onclick="showPage('contact')" id="btn-contact">Contact</button>
-            <button onclick="showPage('donate')" id="btn-donate">Donate</button>
-            <button onclick="showPage('cart')" id="btn-cart">Cart <span id="count" class="cart-dot">0</span></button>
-        </div>
-        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-    </nav>
-
-    <div class="container">
-        <section id="home" class="page active">
-            <div class="hero">
-                <h1>Crafting Tactile Joy.</h1>
-                <p>Premium 3D printed mechanical fidgets for everyone.</p>
-            </div>
-            <div class="img-box" style="height: 400px;">Upload Brand Hero Image</div>
-        </section>
-
-        <section id="shop" class="page">
-            <h2 style="font-size: 2.5rem; margin-bottom: 40px;">Shop</h2>
-            <div class="grid">
-                <div class="card">
-                    <div class="img-box">Product Image</div>
-                    <h3>Kinetic Spinner</h3>
-                    <p style="color:var(--text-secondary);">$18.00</p>
-                    <button class="btn-main" onclick="add('Kinetic Spinner')">Add to Bag</button>
-                </div>
-                <div class="card">
-                    <div class="img-box">Product Image</div>
-                    <h3>Precision Toggle</h3>
-                    <p style="color:var(--text-secondary);">$12.00</p>
-                    <button class="btn-main" onclick="add('Precision Toggle')">Add to Bag</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="about" class="page">
-            <div style="max-width: 600px; margin: 0 auto; text-align: center;">
-                <h2>Our Story</h2>
-                <p>We are a two-person workshop specializing in custom engineering and functional 3D art. Every piece is printed with industrial-grade precision.</p>
-                <div class="img-box">Workshop Photo</div>
-            </div>
-        </section>
-
-        <section id="contact" class="page">
-            <div class="card" style="max-width: 500px; margin: 0 auto; text-align: center;">
-                <h2>Contact</h2>
-                <p>Email: <b>hello@3dprintdreams.com</b></p>
-                <p>We respond within 24 hours.</p>
-            </div>
-        </section>
-
-        <section id="donate" class="page">
-            <div class="card" style="max-width: 500px; margin: 0 auto; text-align: center;">
-                <h2>Filament Fund</h2>
-                <p>Support our research into new sustainable materials.</p>
-                <button class="btn-main" onclick="donate()">Donate via PayPal</button>
-            </div>
-        </section>
-
-        <section id="cart" class="page">
-            <div class="card" style="max-width: 600px; margin: 0 auto;">
-                <h2>Your Bag</h2>
-                <div id="list">Empty</div>
-                <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border);">
-                <button class="btn-main" id="check-btn" disabled onclick="alert('Checkout Ready')">Checkout</button>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        let bag = [];
-
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active-btn'));
-            document.getElementById('btn-' + id).classList.add('active-btn');
-            window.scrollTo(0, 0);
-        }
-
-        function toggleTheme() {
-            const b = document.documentElement;
-            b.setAttribute('data-theme', b.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-        }
-
-        function add(item) {
-            bag.push(item);
-            document.getElementById('count').innerText = bag.length;
-            renderBag();
-        }
-
-        function renderBag() {
-            const list = document.getElementById('list');
-            if(bag.length === 0) {
-                list.innerText = "Empty";
-                document.getElementById('check-btn').disabled = true;
-            } else {
-                list.innerHTML = bag.map(i => `<div style="padding:10px 0;">📦 ${i}</div>`).join('');
-                document.getElementById('check-btn').disabled = false;
-            }
-        }
-
-        function donate() {
-            window.open('https://www.paypal.com/donate', '_blank');
-        }
-    </script>
-</body>
-</html>        }
-
-        /* --- Navigation --- */
+        /* --- Nav Bar --- */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1rem 5%;
-            background: var(--nav-bg);
-            border-bottom: var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            height: 70px;
         }
 
-        .logo { font-weight: 800; font-size: 1.4rem; color: var(--accent); }
-
-        .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
+        .logo { font-weight: 700; font-size: 1.1rem; }
 
         .nav-links button {
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--text);
-            padding: 10px 15px;
-            cursor: pointer;
-            font-weight: 600;
-            border-radius: var(--radius);
-            transition: 0.2s;
-        }
-
-        .nav-links button:hover, .nav-links button.active-btn {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        /* --- Main Content Area (Scrollable) --- */
-        .container {
-            flex: 1;
-            padding: 40px 5%;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            box-sizing: border-box;
-        }
-
-        .page {
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-            padding-bottom: 50px; /* Extra space to ensure bottom is scrollable */
-        }
-
-        .page.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- UI Components --- */
-        .card {
-            background: var(--card);
-            border: var(--border);
-            border-radius: var(--radius);
-            padding: 2.5rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 25px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            padding-top: 20px;
-        }
-
-        .product-card {
-            background: var(--card);
-            border: var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            text-align: center;
-            transition: 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow); }
-
-        .img-placeholder {
-            width: 100%;
-            aspect-ratio: 1;
-            background: rgba(0,0,0,0.04);
-            border: 2px dashed #bdc3c7;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-        }
-
-        .btn-action {
-            background: var(--accent);
-            color: white;
+            background: none;
             border: none;
-            padding: 14px;
-            border-radius: var(--radius);
-            font-weight: 700;
+            color: var(--text-sec);
+            font-weight: 500;
             cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            transition: filter 0.2s;
-        }
-
-        .btn-action:hover { filter: brightness(1.1); }
-        .btn-action:active { transform: scale(0.98); }
-
-        .theme-toggle {
-            background: var(--card);
-            border: var(--border);
             padding: 8px 12px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1.1rem;
+            border-radius: 8px;
         }
 
-        .cart-badge {
-            background: #ff4757;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            margin-left: 5px;
-        }
-    </style>
-</head>
-<body>
+        .nav-links button.active-btn { color: var(--primary); }
 
-    <nav>
-        <div class="logo">3D PRINT DREAMS</div>
-        <div class="nav-links">
-            <button onclick="showPage('home')" id="btn-home" class="active-btn">Home</button>
-            <button onclick="showPage('shop')" id="btn-shop">Shop</button>
-            <button onclick="showPage('about')" id="btn-about">About</button>
-            <button onclick="showPage('contact')" id="btn-contact">Contact</button>
-            <button onclick="showPage('donate')" id="btn-donate">Donate</button>
-            <button onclick="showPage('cart')" id="btn-cart">Cart <span class="cart-badge" id="cart-count">0</span></button>
-        </div>
-        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-    </nav>
-
-    <div class="container">
-        <section id="home" class="page active">
-            <div class="card">
-                <h1>Dreamed in 3D. Printed for You.</h1>
-                <p>Welcome to 3D Print Dreams. We specialize in high-precision fidget toys and custom tech gear.</p>
-                <div class="img-placeholder">Upload Workshop Photo</div>
-            </div>
-        </section>
-
-        <section id="shop" class="page">
-            <h2>The Fidget Shop</h2>
-            <div class="grid">
-                <div class="product-card">
-                    <div class="img-placeholder">Image Placeholder</div>
-                    <div>
-                        <h3>Precision Spinner</h3>
-                        <p>$15.00</p>
-                    </div>
-                    <button class="btn-action" onclick="addToCart('Precision Spinner')">Add to Cart</button>
-                </div>
-                <div class="product-card">
-                    <div class="img-placeholder">Image Placeholder</div>
-                    <div>
-                        <h3>Mechanical Fidget Cube</h3>
-                        <p>$20.00</p>
-                    </div>
-                    <button class="btn-action" onclick="addToCart('Fidget Cube')">Add to Cart</button>
-                </div>
-                <div class="product-card">
-                    <div class="img-placeholder">Image Placeholder</div>
-                    <div>
-                        <h3>Articulated Dragon</h3>
-                        <p>$25.00</p>
-                    </div>
-                    <button class="btn-action" onclick="addToCart('Articulated Dragon')">Add to Cart</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="about" class="page">
-            <div class="card">
-                <h2>Two Makers, One Vision</h2>
-                <p>3D Print Dreams is run by a dedicated team of two. We handle everything from CAD design to final assembly.</p>
-                <div class="img-placeholder">Our Team Photo</div>
-            </div>
-        </section>
-
-        <section id="contact" class="page">
-            <div class="card">
-                <h2>Contact Us</h2>
-                <p>Questions about an order? Need a custom print?</p>
-                <p><strong>Email:</strong> hello@3dprintdreams.com</p>
-                <div class="img-placeholder" style="height:100px;">Contact Form Coming Soon</div>
-            </div>
-        </section>
-
-        <section id="donate" class="page">
-            <div class="card" style="text-align: center;">
-                <h2>Support Our Lab</h2>
-                <p>Your donations help us buy new filament colors and upgrade our nozzle heads!</p>
-                <button class="btn-action" onclick="simulateDonate()">Donate via PayPal</button>
-            </div>
-        </section>
-
-        <section id="cart" class="page">
-            <div class="card">
-                <h2>Your Shopping Cart</h2>
-                <div id="cart-items">Your cart is currently empty.</div>
-                <hr style="margin: 20px 0; border: none; border-top: var(--border);">
-                <button class="btn-action" id="checkout-btn" disabled onclick="alert('Checkout system coming soon!')">Proceed to Checkout</button>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        let cart = [];
-
-        function showPage(pageId) {
-            // Switch Page Visibility
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-
-            // Update Nav Button Active Style
-            document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active-btn'));
-            document.getElementById('btn-' + pageId).classList.add('active-btn');
-
-            // Scroll to the top of the NEW page automatically
-            window.scrollTo(0, 0);
-        }
-
-        function toggleTheme() {
-            const body = document.documentElement;
-            const current = body.getAttribute('data-theme');
-            body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-        }
-
-        function addToCart(itemName) {
-            cart.push(itemName);
-            document.getElementById('cart-count').innerText = cart.length;
-            updateCartDisplay();
-            
-            // Visual feedback that it worked
-            console.log("Added " + itemName + " to cart.");
-        }
-
-        function updateCartDisplay() {
-            const cartDiv = document.getElementById('cart-items');
-            const checkoutBtn = document.getElementById('checkout-btn');
-            
-            if(cart.length > 0) {
-                cartDiv.innerHTML = cart.map((item, index) => 
-                    `<div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                        <span>📦 ${item}</span>
-                        <button onclick="removeItem(${index})" style="background:none; border:none; color:#ff4757; cursor:pointer;">Remove</button>
-                    </div>`
-                ).join('');
-                checkoutBtn.disabled = false;
-            } else {
-                cartDiv.innerHTML = "Your cart is currently empty.";
-                checkoutBtn.disabled = true;
-            }
-        }
-
-        function removeItem(index) {
-            cart.splice(index, 1);
-            document.getElementById('cart-count').innerText = cart.length;
-            updateCartDisplay();
-        }
-
-        function simulateDonate() {
-            // This replaces the broken PayPal link with a clear action
-            const confirmed = confirm("This would normally redirect to PayPal. Ready to support the lab?");
-            if(confirmed) {
-                window.open('https://www.paypal.com', '_blank');
-            }
-        }
-    </script>
-</body>
-</html>        /* --- Content Container --- */
-        .container {
+        /* --- Content Control --- */
+        .main-view {
             height: calc(100vh - 70px);
-            overflow-y: auto;
-            padding: 40px 20px;
+            width: 100%;
+            overflow-y: auto; /* Allow scrolling inside the pages */
         }
 
-        .page {
-            display: none;
-            max-width: 900px;
-            margin: 0 auto;
+        .page { 
+            display: none; 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
             animation: fadeIn 0.4s ease;
         }
 
         .page.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- Home Page Specific (No Scroll) --- */
+        #home {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            overflow: hidden; /* Homepage specifically will not scroll */
         }
 
-        /* --- UI Elements --- */
+        .hero-box {
+            width: 90%;
+            height: 60vh;
+            background: var(--surface);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            color: var(--text-sec);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-text { text-align: center; margin-bottom: 20px; }
+
+        /* --- Shop & Cards --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        
         .card {
-            background: var(--card);
-            border: var(--border);
+            background: var(--surface);
             border-radius: var(--radius);
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card {
-            background: var(--card);
-            border: var(--border);
-            border-radius: var(--radius);
-            padding: 15px;
+            padding: 20px;
             text-align: center;
-            transition: transform 0.2s;
         }
-
-        .product-card:hover { transform: translateY(-5px); }
 
         .img-placeholder {
             width: 100%;
             aspect-ratio: 1;
-            background: rgba(0,0,0,0.03);
-            border: 2px dashed #ccc;
-            border-radius: 8px;
+            background: var(--bg);
+            border-radius: 12px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px;
-            color: #999;
         }
 
-        .btn-action {
-            background: var(--accent);
+        .btn-buy {
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: var(--radius);
-            font-weight: bold;
-            cursor: pointer;
+            padding: 12px;
             width: 100%;
-        }
-
-        .theme-toggle {
-            background: none;
-            border: var(--border);
-            padding: 5px 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
-        .cart-badge {
-            background: var(--accent);
-            color: white;
-            padding: 2px 8px;
             border-radius: 10px;
-            font-size: 0.8rem;
-            margin-left: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
         }
+
+        .theme-toggle { cursor: pointer; border: none; background: none; font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -661,68 +151,61 @@
             <button onclick="showPage('about')" id="btn-about">About</button>
             <button onclick="showPage('contact')" id="btn-contact">Contact</button>
             <button onclick="showPage('donate')" id="btn-donate">Donate</button>
-            <button onclick="showPage('cart')" id="btn-cart">Cart <span class="cart-badge" id="cart-count">0</span></button>
+            <button onclick="showPage('cart')" id="btn-cart">Cart (<span id="cart-qty">0</span>)</button>
         </div>
         <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
     </nav>
 
-    <div class="container">
+    <div class="main-view">
         <section id="home" class="page active">
-            <div class="card">
-                <h1>Precision Fidgets</h1>
-                <p>High-quality 3D printed mechanical toys. Designed and produced by a team of two.</p>
-                <div class="img-placeholder">Upload Hero Image Here</div>
+            <div class="hero-text">
+                <h1 style="font-size: 2.5rem;">3D Print Dreams</h1>
+                <p style="color: var(--text-sec);">Custom engineered fidgets and accessories.</p>
             </div>
+            <div class="hero-box">Main Hero Image Goes Here</div>
         </section>
 
         <section id="shop" class="page">
-            <h2>The Collection</h2>
+            <h2 style="margin-bottom: 30px;">Shop All</h2>
             <div class="grid">
-                <div class="product-card">
-                    <div class="img-placeholder">Product Image</div>
-                    <h3>Infinity Cube</h3>
+                <div class="card">
+                    <div class="img-placeholder">Product Photo</div>
+                    <h3>Precision Spinner</h3>
                     <p>$15.00</p>
-                    <button class="btn-action" onclick="addToCart('Infinity Cube')">Add to Cart</button>
+                    <button class="btn-buy" onclick="buy('Precision Spinner')">Add to Cart</button>
                 </div>
-                <div class="product-card">
-                    <div class="img-placeholder">Product Image</div>
-                    <h3>Gear Spinner</h3>
-                    <p>$12.00</p>
-                    <button class="btn-action" onclick="addToCart('Gear Spinner')">Add to Cart</button>
+                <div class="card">
+                    <div class="img-placeholder">Product Photo</div>
+                    <h3>Fidget Cube</h3>
+                    <p>$20.00</p>
+                    <button class="btn-buy" onclick="buy('Fidget Cube')">Add to Cart</button>
                 </div>
             </div>
         </section>
 
         <section id="about" class="page">
-            <div class="card">
-                <h2>Our Story</h2>
-                <p>Started in a garage by two friends, 3D Print Dreams focuses on mechanical integrity and satisfying tactile feedback. We don't do "sleek" corporate—we do real engineering.</p>
-                <div class="img-placeholder">Workshop Photo</div>
-            </div>
+            <h2>About Our Workshop</h2>
+            <p style="margin-top:20px;">Run by two makers in a small workshop. We focus on mechanical toys that last.</p>
         </section>
 
         <section id="contact" class="page">
-            <div class="card">
-                <h2>Get in Touch</h2>
-                <p>Email: <strong>hello@3dprintdreams.com</strong></p>
-                <p>Phone: Coming soon</p>
-            </div>
+            <h2>Contact Us</h2>
+            <p style="margin-top:20px;">Email: hello@3dprintdreams.com</p>
         </section>
 
         <section id="donate" class="page">
-            <div class="card" style="text-align: center;">
+            <div class="card">
                 <h2>Support the Lab</h2>
-                <p>Help us test new materials and exotic filaments.</p>
-                <button class="btn-action">Donate via PayPal</button>
+                <p style="margin: 20px 0;">Donations help us buy new high-temp filaments.</p>
+                <button class="btn-buy" onclick="window.open('https://paypal.com', '_blank')">Donate via PayPal</button>
             </div>
         </section>
 
         <section id="cart" class="page">
             <div class="card">
-                <h2>Your Shopping Cart</h2>
-                <div id="cart-items">Your cart is empty.</div>
-                <hr style="margin: 20px 0; border: none; border-top: var(--border);">
-                <button class="btn-action" id="checkout-btn" disabled>Proceed to Checkout</button>
+                <h2>Your Bag</h2>
+                <div id="cart-list" style="margin: 20px 0;">Empty</div>
+                <button class="btn-buy" id="checkout" disabled>Checkout</button>
             </div>
         </section>
     </div>
@@ -730,42 +213,33 @@
     <script>
         let cart = [];
 
-        function showPage(pageId) {
-            // Update Pages
+        function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-
-            // Update Nav Buttons
+            document.getElementById(id).classList.add('active');
+            
             document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active-btn'));
-            document.getElementById('btn-' + pageId).classList.add('active-btn');
-
-            // Reset Scroll
-            document.querySelector('.container').scrollTop = 0;
+            document.getElementById('btn-' + id).classList.add('active-btn');
+            
+            // Ensure we start at the top of the new page
+            document.querySelector('.main-view').scrollTop = 0;
         }
 
         function toggleTheme() {
-            const body = document.documentElement;
-            const current = body.getAttribute('data-theme');
-            body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+            const el = document.documentElement;
+            el.setAttribute('data-theme', el.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
         }
 
-        function addToCart(itemName) {
-            cart.push(itemName);
-            document.getElementById('cart-count').innerText = cart.length;
-            updateCartDisplay();
-            alert(itemName + " added to cart!");
+        function buy(item) {
+            cart.push(item);
+            document.getElementById('cart-qty').innerText = cart.length;
+            render();
         }
 
-        function updateCartDisplay() {
-            const cartDiv = document.getElementById('cart-items');
-            const checkoutBtn = document.getElementById('checkout-btn');
-            
+        function render() {
+            const list = document.getElementById('cart-list');
             if(cart.length > 0) {
-                cartDiv.innerHTML = cart.map(item => `<p>📦 ${item}</p>`).join('');
-                checkoutBtn.disabled = false;
-            } else {
-                cartDiv.innerHTML = "Your cart is empty.";
-                checkoutBtn.disabled = true;
+                list.innerHTML = cart.map(i => `<p style="padding:5px 0;">📦 ${i}</p>`).join('');
+                document.getElementById('checkout').disabled = false;
             }
         }
     </script>
