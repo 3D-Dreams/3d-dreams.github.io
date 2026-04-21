@@ -25,94 +25,98 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        body {
+        html, body {
+            height: 100%;
             font-family: -apple-system, system-ui, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            transition: 0.3s;
-            overflow: hidden; /* Prevent body scroll to keep the layout tight */
+            transition: background 0.3s;
+            overflow: hidden; /* Main window stays locked */
         }
 
-        /* --- Nav Bar --- */
+        /* --- Navigation --- */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 5%;
+            padding: 0 5%;
             background: var(--bg);
             border-bottom: 1px solid var(--border);
             height: 70px;
+            z-index: 1000;
+            position: relative;
         }
 
-        .logo { font-weight: 700; font-size: 1.1rem; }
+        .logo { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
 
         .nav-links button {
             background: none;
             border: none;
             color: var(--text-sec);
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             padding: 8px 12px;
             border-radius: 8px;
+            transition: 0.2s;
         }
 
-        .nav-links button.active-btn { color: var(--primary); }
+        .nav-links button.active-btn { color: var(--primary); background: var(--surface); }
 
-        /* --- Content Control --- */
-        .main-view {
+        /* --- Page Container --- */
+        #content-wrapper {
             height: calc(100vh - 70px);
             width: 100%;
-            overflow-y: auto; /* Allow scrolling inside the pages */
+            position: relative;
         }
 
         .page { 
-            display: none; 
-            max-width: 1000px; 
-            margin: 0 auto; 
-            padding: 40px 20px; 
-            animation: fadeIn 0.4s ease;
+            display: none; /* All pages hidden by default */
+            height: 100%;
+            width: 100%;
+            overflow-y: auto; /* Allow scrolling on internal pages */
+            padding: 40px 20px;
         }
 
-        .page.active { display: block; }
+        .page.active { 
+            display: block !important; /* Force visibility when active */
+        }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* --- Home Page Specific (No Scroll) --- */
+        /* --- Home Page Specific (Hero only, no scroll) --- */
         #home {
-            height: 100%;
-            display: flex;
+            overflow: hidden; 
+            display: none; 
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 0;
-            overflow: hidden; /* Homepage specifically will not scroll */
+            text-align: center;
         }
 
-        .hero-box {
-            width: 90%;
-            height: 60vh;
+        #home.active { display: flex !important; }
+
+        .hero-image {
+            width: 85%;
+            max-width: 800px;
+            height: 50vh;
             background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: var(--radius);
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid var(--border);
+            margin-top: 20px;
             color: var(--text-sec);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .hero-text { text-align: center; margin-bottom: 20px; }
-
-        /* --- Shop & Cards --- */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        /* --- Shared Styling --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 1000px; margin: 20px auto; }
         
         .card {
             background: var(--surface);
             border-radius: var(--radius);
             padding: 20px;
             text-align: center;
+            border: 1px solid var(--border);
         }
 
         .img-placeholder {
@@ -126,7 +130,7 @@
             justify-content: center;
         }
 
-        .btn-buy {
+        .btn-action {
             background: var(--primary);
             color: white;
             border: none;
@@ -135,10 +139,12 @@
             border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
+            transition: transform 0.1s;
         }
 
-        .theme-toggle { cursor: pointer; border: none; background: none; font-size: 1.2rem; }
+        .btn-action:active { transform: scale(0.98); }
+
+        .theme-toggle { cursor: pointer; border: none; background: none; font-size: 1.2rem; margin-left: 10px;}
     </style>
 </head>
 <body>
@@ -156,56 +162,62 @@
         <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
     </nav>
 
-    <div class="main-view">
+    <div id="content-wrapper">
         <section id="home" class="page active">
-            <div class="hero-text">
-                <h1 style="font-size: 2.5rem;">3D Print Dreams</h1>
-                <p style="color: var(--text-sec);">Custom engineered fidgets and accessories.</p>
-            </div>
-            <div class="hero-box">Main Hero Image Goes Here</div>
+            <h1 style="font-size: 3rem; letter-spacing: -2px;">3D Print Dreams</h1>
+            <p style="color: var(--text-sec); font-size: 1.2rem;">Precision engineering meets tactile play.</p>
+            <div class="hero-image">Main Hero Image Placeholder</div>
         </section>
 
         <section id="shop" class="page">
-            <h2 style="margin-bottom: 30px;">Shop All</h2>
-            <div class="grid">
-                <div class="card">
-                    <div class="img-placeholder">Product Photo</div>
-                    <h3>Precision Spinner</h3>
-                    <p>$15.00</p>
-                    <button class="btn-buy" onclick="buy('Precision Spinner')">Add to Cart</button>
-                </div>
-                <div class="card">
-                    <div class="img-placeholder">Product Photo</div>
-                    <h3>Fidget Cube</h3>
-                    <p>$20.00</p>
-                    <button class="btn-buy" onclick="buy('Fidget Cube')">Add to Cart</button>
+            <div style="max-width: 1000px; margin: 0 auto;">
+                <h2 style="font-size: 2rem; margin-bottom: 20px;">The Collection</h2>
+                <div class="grid">
+                    <div class="card">
+                        <div class="img-placeholder">Product Image</div>
+                        <h3>Fidget Spinner Pro</h3>
+                        <p style="margin-bottom: 15px;">$15.00</p>
+                        <button class="btn-action" onclick="addToCart('Spinner Pro')">Add to Cart</button>
+                    </div>
+                    <div class="card">
+                        <div class="img-placeholder">Product Image</div>
+                        <h3>Mechanical Cube</h3>
+                        <p style="margin-bottom: 15px;">$20.00</p>
+                        <button class="btn-action" onclick="addToCart('Mechanical Cube')">Add to Cart</button>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section id="about" class="page">
-            <h2>About Our Workshop</h2>
-            <p style="margin-top:20px;">Run by two makers in a small workshop. We focus on mechanical toys that last.</p>
+            <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+                <h2>Our Workshop</h2>
+                <p style="margin-top: 20px;">Run by a team of two creators. We don't do mass production; we do custom quality.</p>
+                <div class="hero-image" style="height: 300px;">Workshop Photo</div>
+            </div>
         </section>
 
         <section id="contact" class="page">
-            <h2>Contact Us</h2>
-            <p style="margin-top:20px;">Email: hello@3dprintdreams.com</p>
+            <div class="card" style="max-width: 500px; margin: 40px auto;">
+                <h2>Contact</h2>
+                <p style="margin: 20px 0;">Email: <b>hello@3dprintdreams.com</b></p>
+                <p>Reach out for custom business orders or bulk requests.</p>
+            </div>
         </section>
 
         <section id="donate" class="page">
-            <div class="card">
-                <h2>Support the Lab</h2>
-                <p style="margin: 20px 0;">Donations help us buy new high-temp filaments.</p>
-                <button class="btn-buy" onclick="window.open('https://paypal.com', '_blank')">Donate via PayPal</button>
+            <div class="card" style="max-width: 500px; margin: 40px auto;">
+                <h2>Support</h2>
+                <p style="margin-bottom: 20px;">Help us fund new filament types and nozzle upgrades.</p>
+                <button class="btn-action" onclick="window.open('https://paypal.com', '_blank')">Donate via PayPal</button>
             </div>
         </section>
 
         <section id="cart" class="page">
-            <div class="card">
-                <h2>Your Bag</h2>
-                <div id="cart-list" style="margin: 20px 0;">Empty</div>
-                <button class="btn-buy" id="checkout" disabled>Checkout</button>
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <h2>Your Cart</h2>
+                <div id="cart-display" style="margin: 20px 0; color: var(--text-sec);">Your cart is currently empty.</div>
+                <button class="btn-action" id="checkout-btn" disabled>Checkout</button>
             </div>
         </section>
     </div>
@@ -213,33 +225,47 @@
     <script>
         let cart = [];
 
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            
-            document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active-btn'));
-            document.getElementById('btn-' + id).classList.add('active-btn');
-            
-            // Ensure we start at the top of the new page
-            document.querySelector('.main-view').scrollTop = 0;
+        function showPage(pageId) {
+            console.log("Switching to: " + pageId); // Helpful for debugging
+
+            // 1. Hide every page
+            const allPages = document.querySelectorAll('.page');
+            allPages.forEach(p => {
+                p.classList.remove('active');
+            });
+
+            // 2. Show the specific page
+            const targetPage = document.getElementById(pageId);
+            targetPage.classList.add('active');
+
+            // 3. Update the Nav Buttons
+            document.querySelectorAll('.nav-links button').forEach(btn => {
+                btn.classList.remove('active-btn');
+            });
+            document.getElementById('btn-' + pageId).classList.add('active-btn');
+
+            // 4. Scroll the new page to the top
+            targetPage.scrollTop = 0;
         }
 
         function toggleTheme() {
-            const el = document.documentElement;
-            el.setAttribute('data-theme', el.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+            const root = document.documentElement;
+            const isDark = root.getAttribute('data-theme') === 'dark';
+            root.setAttribute('data-theme', isDark ? 'light' : 'dark');
         }
 
-        function buy(item) {
+        function addToCart(item) {
             cart.push(item);
             document.getElementById('cart-qty').innerText = cart.length;
-            render();
+            updateCart();
         }
 
-        function render() {
-            const list = document.getElementById('cart-list');
+        function updateCart() {
+            const display = document.getElementById('cart-display');
+            const btn = document.getElementById('checkout-btn');
             if(cart.length > 0) {
-                list.innerHTML = cart.map(i => `<p style="padding:5px 0;">📦 ${i}</p>`).join('');
-                document.getElementById('checkout').disabled = false;
+                display.innerHTML = cart.map(i => `<div style="padding:10px; border-bottom:1px solid var(--border)">📦 ${i}</div>`).join('');
+                btn.disabled = false;
             }
         }
     </script>
