@@ -3,39 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Print Dreams</title>
+    <title>3D Print Dreams | Custom Fidgets</title>
     <style>
         :root {
-            --bg: #f8f9fa;
-            --text: #2d3436;
-            --card: #ffffff;
-            --accent: #0984e3; 
-            --nav-bg: #ffffff;
-            --border: 1px solid #dfe6e9;
-            --radius: 12px;
-            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --primary: #007aff; /* Clean Apple-style Blue */
+            --bg: #ffffff;
+            --surface: #f5f5f7;
+            --text: #1d1d1f;
+            --text-secondary: #86868b;
+            --border: #d2d2d7;
+            --radius: 14px;
+            --shadow: 0 8px 30px rgba(0,0,0,0.04);
         }
 
         [data-theme="dark"] {
-            --bg: #1e272e;
-            --text: #f1f2f6;
-            --card: #2f3542;
-            --accent: #74b9ff;
-            --nav-bg: #2f3542;
-            --border: 1px solid #57606f;
-            --shadow: 0 4px 15px rgba(0,0,0,0.4);
+            --bg: #000000;
+            --surface: #1c1c1e;
+            --text: #f5f5f7;
+            --text-secondary: #a1a1a6;
+            --border: #38383a;
+            --shadow: 0 8px 30px rgba(0,0,0,0.3);
         }
 
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        
         body {
             margin: 0;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            transition: background 0.3s ease;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            line-height: 1.5;
+            transition: 0.3s ease;
         }
+
+        /* --- Navigation --- */
+        nav {
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 10%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+        }
+
+        [data-theme="dark"] nav { background: rgba(0, 0, 0, 0.8); }
+
+        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: -0.5px; }
+
+        .nav-links { display: flex; gap: 15px; }
+
+        .nav-links button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .nav-links button:hover, .nav-links button.active-btn {
+            color: var(--primary);
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .page { display: none; animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .page.active { display: block; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Clean Components --- */
+        .hero { text-align: center; margin-bottom: 80px; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; letter-spacing: -2px; }
+        .hero p { font-size: 1.4rem; color: var(--text-secondary); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: left;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .card:hover { border-color: var(--primary); transform: scale(1.02); }
+
+        .img-box {
+            background: var(--bg);
+            width: 100%;
+            aspect-ratio: 4/3;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .btn-main {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        .btn-main:hover { opacity: 0.9; transform: scale(0.98); }
+
+        .theme-toggle {
+            background: var(--surface);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-dot {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">3D PRINT DREAMS</div>
+        <div class="nav-links">
+            <button onclick="showPage('home')" id="btn-home" class="active-btn">Home</button>
+            <button onclick="showPage('shop')" id="btn-shop">Shop</button>
+            <button onclick="showPage('about')" id="btn-about">About</button>
+            <button onclick="showPage('contact')" id="btn-contact">Contact</button>
+            <button onclick="showPage('donate')" id="btn-donate">Donate</button>
+            <button onclick="showPage('cart')" id="btn-cart">Cart <span id="count" class="cart-dot">0</span></button>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    </nav>
+
+    <div class="container">
+        <section id="home" class="page active">
+            <div class="hero">
+                <h1>Crafting Tactile Joy.</h1>
+                <p>Premium 3D printed mechanical fidgets for everyone.</p>
+            </div>
+            <div class="img-box" style="height: 400px;">Upload Brand Hero Image</div>
+        </section>
+
+        <section id="shop" class="page">
+            <h2 style="font-size: 2.5rem; margin-bottom: 40px;">Shop</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="img-box">Product Image</div>
+                    <h3>Kinetic Spinner</h3>
+                    <p style="color:var(--text-secondary);">$18.00</p>
+                    <button class="btn-main" onclick="add('Kinetic Spinner')">Add to Bag</button>
+                </div>
+                <div class="card">
+                    <div class="img-box">Product Image</div>
+                    <h3>Precision Toggle</h3>
+                    <p style="color:var(--text-secondary);">$12.00</p>
+                    <button class="btn-main" onclick="add('Precision Toggle')">Add to Bag</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="page">
+            <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+                <h2>Our Story</h2>
+                <p>We are a two-person workshop specializing in custom engineering and functional 3D art. Every piece is printed with industrial-grade precision.</p>
+                <div class="img-box">Workshop Photo</div>
+            </div>
+        </section>
+
+        <section id="contact" class="page">
+            <div class="card" style="max-width: 500px; margin: 0 auto; text-align: center;">
+                <h2>Contact</h2>
+                <p>Email: <b>hello@3dprintdreams.com</b></p>
+                <p>We respond within 24 hours.</p>
+            </div>
+        </section>
+
+        <section id="donate" class="page">
+            <div class="card" style="max-width: 500px; margin: 0 auto; text-align: center;">
+                <h2>Filament Fund</h2>
+                <p>Support our research into new sustainable materials.</p>
+                <button class="btn-main" onclick="donate()">Donate via PayPal</button>
+            </div>
+        </section>
+
+        <section id="cart" class="page">
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <h2>Your Bag</h2>
+                <div id="list">Empty</div>
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border);">
+                <button class="btn-main" id="check-btn" disabled onclick="alert('Checkout Ready')">Checkout</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let bag = [];
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active-btn'));
+            document.getElementById('btn-' + id).classList.add('active-btn');
+            window.scrollTo(0, 0);
+        }
+
+        function toggleTheme() {
+            const b = document.documentElement;
+            b.setAttribute('data-theme', b.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        }
+
+        function add(item) {
+            bag.push(item);
+            document.getElementById('count').innerText = bag.length;
+            renderBag();
+        }
+
+        function renderBag() {
+            const list = document.getElementById('list');
+            if(bag.length === 0) {
+                list.innerText = "Empty";
+                document.getElementById('check-btn').disabled = true;
+            } else {
+                list.innerHTML = bag.map(i => `<div style="padding:10px 0;">📦 ${i}</div>`).join('');
+                document.getElementById('check-btn').disabled = false;
+            }
+        }
+
+        function donate() {
+            window.open('https://www.paypal.com/donate', '_blank');
+        }
+    </script>
+</body>
+</html>        }
 
         /* --- Navigation --- */
         nav {
