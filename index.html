@@ -26,12 +26,12 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         html, body {
-            height: 100%;
+            height: 100vh;
             font-family: -apple-system, system-ui, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             transition: background 0.3s;
-            overflow: hidden; /* Main window stays locked */
+            overflow: hidden; /* Locks the main window */
         }
 
         /* --- Navigation --- */
@@ -49,6 +49,8 @@
 
         .logo { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
 
+        .nav-links { display: flex; gap: 5px; }
+
         .nav-links button {
             background: none;
             border: none;
@@ -62,7 +64,7 @@
 
         .nav-links button.active-btn { color: var(--primary); background: var(--surface); }
 
-        /* --- Page Container --- */
+        /* --- Content Container --- */
         #content-wrapper {
             height: calc(100vh - 70px);
             width: 100%;
@@ -70,34 +72,32 @@
         }
 
         .page { 
-            display: none; /* All pages hidden by default */
+            display: none; 
             height: 100%;
             width: 100%;
-            overflow-y: auto; /* Allow scrolling on internal pages */
+            overflow-y: auto; /* Allows scrolling inside the shop and other pages */
             padding: 40px 20px;
+            -webkit-overflow-scrolling: touch;
         }
 
-        .page.active { 
-            display: block !important; /* Force visibility when active */
-        }
+        .page.active { display: block !important; }
 
         /* --- Home Page Specific (Hero only, no scroll) --- */
         #home {
-            overflow: hidden; 
+            overflow: hidden !important; 
             display: none; 
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 0;
             text-align: center;
+            padding: 0;
         }
-
         #home.active { display: flex !important; }
 
         .hero-image {
             width: 85%;
             max-width: 800px;
-            height: 50vh;
+            height: 45vh;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
@@ -108,15 +108,25 @@
             color: var(--text-sec);
         }
 
-        /* --- Shared Styling --- */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 1000px; margin: 20px auto; }
+        /* --- Shop Styling --- */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+            gap: 20px; 
+            max-width: 1200px; 
+            margin: 20px auto;
+            padding-bottom: 100px; /* Space at the bottom of the scroll */
+        }
         
         .card {
             background: var(--surface);
             border-radius: var(--radius);
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .img-placeholder {
@@ -124,10 +134,12 @@
             aspect-ratio: 1;
             background: var(--bg);
             border-radius: 12px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 0.8rem;
+            color: var(--text-sec);
         }
 
         .btn-action {
@@ -142,9 +154,19 @@
             transition: transform 0.1s;
         }
 
-        .btn-action:active { transform: scale(0.98); }
+        .btn-action:active { transform: scale(0.96); }
 
         .theme-toggle { cursor: pointer; border: none; background: none; font-size: 1.2rem; margin-left: 10px;}
+
+        /* --- Cart Item Style --- */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        .remove-btn { color: #ff3b30; cursor: pointer; background: none; border: none; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -152,72 +174,62 @@
     <nav>
         <div class="logo">3D PRINT DREAMS</div>
         <div class="nav-links">
-            <button onclick="showPage('home')" id="btn-home" class="active-btn">Home</button>
-            <button onclick="showPage('shop')" id="btn-shop">Shop</button>
-            <button onclick="showPage('about')" id="btn-about">About</button>
-            <button onclick="showPage('contact')" id="btn-contact">Contact</button>
-            <button onclick="showPage('donate')" id="btn-donate">Donate</button>
-            <button onclick="showPage('cart')" id="btn-cart">Cart (<span id="cart-qty">0</span>)</button>
+            <button onclick="showPage('home')" id="nav-home" class="active-btn">Home</button>
+            <button onclick="showPage('shop')" id="nav-shop">Shop</button>
+            <button onclick="showPage('about')" id="nav-about">About</button>
+            <button onclick="showPage('contact')" id="nav-contact">Contact</button>
+            <button onclick="showPage('donate')" id="nav-donate">Donate</button>
+            <button onclick="showPage('cart')" id="nav-cart">Cart (<span id="cart-qty">0</span>)</button>
         </div>
         <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
     </nav>
 
     <div id="content-wrapper">
         <section id="home" class="page active">
-            <h1 style="font-size: 3rem; letter-spacing: -2px;">3D Print Dreams</h1>
-            <p style="color: var(--text-sec); font-size: 1.2rem;">Precision engineering meets tactile play.</p>
-            <div class="hero-image">Main Hero Image Placeholder</div>
+            <h1 style="font-size: 2.5rem; letter-spacing: -1.5px;">3D Print Dreams</h1>
+            <p style="color: var(--text-sec); font-size: 1.1rem; margin-top: 10px;">Hand-crafted 3D mechanical fidgets.</p>
+            <div class="hero-image">Workshop Hero Image</div>
         </section>
 
         <section id="shop" class="page">
-            <div style="max-width: 1000px; margin: 0 auto;">
-                <h2 style="font-size: 2rem; margin-bottom: 20px;">The Collection</h2>
-                <div class="grid">
-                    <div class="card">
-                        <div class="img-placeholder">Product Image</div>
-                        <h3>Fidget Spinner Pro</h3>
-                        <p style="margin-bottom: 15px;">$15.00</p>
-                        <button class="btn-action" onclick="addToCart('Spinner Pro')">Add to Cart</button>
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <h2 style="font-size: 1.8rem; margin-bottom: 10px;">The Collection</h2>
+                <p style="color: var(--text-sec); margin-bottom: 30px;">20 Exclusive Designs</p>
+                <div class="grid" id="product-grid">
                     </div>
-                    <div class="card">
-                        <div class="img-placeholder">Product Image</div>
-                        <h3>Mechanical Cube</h3>
-                        <p style="margin-bottom: 15px;">$20.00</p>
-                        <button class="btn-action" onclick="addToCart('Mechanical Cube')">Add to Cart</button>
-                    </div>
-                </div>
             </div>
         </section>
 
         <section id="about" class="page">
             <div style="max-width: 600px; margin: 0 auto; text-align: center;">
-                <h2>Our Workshop</h2>
-                <p style="margin-top: 20px;">Run by a team of two creators. We don't do mass production; we do custom quality.</p>
-                <div class="hero-image" style="height: 300px;">Workshop Photo</div>
+                <h2>About the Team</h2>
+                <p style="margin: 20px 0; line-height: 1.6;">We are two friends turning filament into mechanical art. No mass-market sleekness, just real tools and toys made by hand.</p>
+                <div class="hero-image" style="height: 250px; width: 100%;">Team Photo</div>
             </div>
         </section>
 
         <section id="contact" class="page">
-            <div class="card" style="max-width: 500px; margin: 40px auto;">
-                <h2>Contact</h2>
-                <p style="margin: 20px 0;">Email: <b>hello@3dprintdreams.com</b></p>
-                <p>Reach out for custom business orders or bulk requests.</p>
+            <div class="card" style="max-width: 500px; margin: 20px auto;">
+                <h2>Get in Touch</h2>
+                <p style="margin: 20px 0;"><b>Email:</b> hello@3dprintdreams.com</p>
+                <p style="color: var(--text-sec);">Drop us a line for custom colors or bulk orders.</p>
             </div>
         </section>
 
         <section id="donate" class="page">
-            <div class="card" style="max-width: 500px; margin: 40px auto;">
-                <h2>Support</h2>
-                <p style="margin-bottom: 20px;">Help us fund new filament types and nozzle upgrades.</p>
+            <div class="card" style="max-width: 500px; margin: 20px auto; text-align: center;">
+                <h2>Support the Lab</h2>
+                <p style="margin-bottom: 25px;">Support helps us upgrade to Carbon Fiber and specialized nozzles.</p>
                 <button class="btn-action" onclick="window.open('https://paypal.com', '_blank')">Donate via PayPal</button>
             </div>
         </section>
 
         <section id="cart" class="page">
             <div class="card" style="max-width: 600px; margin: 0 auto;">
-                <h2>Your Cart</h2>
-                <div id="cart-display" style="margin: 20px 0; color: var(--text-sec);">Your cart is currently empty.</div>
-                <button class="btn-action" id="checkout-btn" disabled>Checkout</button>
+                <h2 style="margin-bottom: 20px;">Your Shopping Bag</h2>
+                <div id="cart-display" style="color: var(--text-sec); text-align: center; padding: 20px;">Your cart is empty.</div>
+                <div id="cart-items-list"></div>
+                <button class="btn-action" id="checkout-btn" style="margin-top: 20px;" disabled onclick="alert('Checkout integration coming soon!')">Proceed to Checkout</button>
             </div>
         </section>
     </div>
@@ -225,47 +237,81 @@
     <script>
         let cart = [];
 
+        // 1. Generate 20 Products for the Shop
+        const productNames = [
+            "Infinity Spinner", "Gear Cube", "Clicky Toggle", "Articulated Dragon", 
+            "Mechanical Key", "Gravity Bolt", "Pocket Turbine", "Magnetic Slider",
+            "Hex Link", "Orbit Ring", "Gryo Sphere", "Carbon Fidget",
+            "Steampunk Cog", "Nano Bot", "Stress Plate", "Nozzle Clicker",
+            "Filament Coil", "Spring Box", "Rotor Toy", "Spur Gear"
+        ];
+
+        const grid = document.getElementById('product-grid');
+        productNames.forEach((name, i) => {
+            const price = (10 + (i % 5) * 5).toFixed(2);
+            grid.innerHTML += `
+                <div class="card">
+                    <div class="img-placeholder">Product #${i+1} Photo</div>
+                    <div style="margin-bottom:15px;">
+                        <h3 style="font-size:1rem;">${name}</h3>
+                        <p style="color:var(--text-sec); font-size:0.9rem;">$${price}</p>
+                    </div>
+                    <button class="btn-action" onclick="addToCart('${name}', '${price}')">Add to Cart</button>
+                </div>
+            `;
+        });
+
+        // 2. Navigation Logic
         function showPage(pageId) {
-            console.log("Switching to: " + pageId); // Helpful for debugging
-
-            // 1. Hide every page
-            const allPages = document.querySelectorAll('.page');
-            allPages.forEach(p => {
-                p.classList.remove('active');
-            });
-
-            // 2. Show the specific page
-            const targetPage = document.getElementById(pageId);
-            targetPage.classList.add('active');
-
-            // 3. Update the Nav Buttons
-            document.querySelectorAll('.nav-links button').forEach(btn => {
-                btn.classList.remove('active-btn');
-            });
-            document.getElementById('btn-' + pageId).classList.add('active-btn');
-
-            // 4. Scroll the new page to the top
-            targetPage.scrollTop = 0;
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // Show target page
+            document.getElementById(pageId).classList.add('active');
+            // Update nav buttons
+            document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active-btn'));
+            document.getElementById('nav-' + pageId).classList.add('active-btn');
+            // Reset scroll to top
+            document.getElementById(pageId).scrollTop = 0;
         }
 
+        // 3. Theme Logic
         function toggleTheme() {
             const root = document.documentElement;
-            const isDark = root.getAttribute('data-theme') === 'dark';
-            root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            const current = root.getAttribute('data-theme');
+            root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
         }
 
-        function addToCart(item) {
-            cart.push(item);
+        // 4. Cart Logic
+        function addToCart(name, price) {
+            cart.push({ name, price });
             document.getElementById('cart-qty').innerText = cart.length;
-            updateCart();
+            updateCartDisplay();
         }
 
-        function updateCart() {
-            const display = document.getElementById('cart-display');
+        function removeItem(index) {
+            cart.splice(index, 1);
+            document.getElementById('cart-qty').innerText = cart.length;
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const emptyMsg = document.getElementById('cart-display');
+            const list = document.getElementById('cart-items-list');
             const btn = document.getElementById('checkout-btn');
-            if(cart.length > 0) {
-                display.innerHTML = cart.map(i => `<div style="padding:10px; border-bottom:1px solid var(--border)">📦 ${i}</div>`).join('');
+
+            if (cart.length > 0) {
+                emptyMsg.style.display = 'none';
+                list.innerHTML = cart.map((item, idx) => `
+                    <div class="cart-item">
+                        <span>📦 ${item.name} - $${item.price}</span>
+                        <button class="remove-btn" onclick="removeItem(${idx})">Remove</button>
+                    </div>
+                `).join('');
                 btn.disabled = false;
+            } else {
+                emptyMsg.style.display = 'block';
+                list.innerHTML = '';
+                btn.disabled = true;
             }
         }
     </script>
