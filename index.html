@@ -3,170 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Print Dreams</title>
+    <title>3D PRINT DREAMS | Precision Mechanical Art</title>
     <style>
         :root {
-            --primary: #007aff;
-            --bg: #ffffff;
-            --surface: #f5f5f7;
+            --primary: #0071e3;
+            --bg: #f5f5f7;
+            --surface: rgba(255, 255, 255, 0.75);
             --text: #1d1d1f;
-            --text-sec: #86868b;
-            --border: #d2d2d7;
-            --radius: 16px;
+            --text-sec: #6e6e73;
+            --accent: rgba(0, 113, 227, 0.1);
+            --border: rgba(0, 0, 0, 0.1);
+            --radius: 20px;
         }
 
         [data-theme="dark"] {
             --bg: #000000;
-            --surface: #1c1c1e;
+            --surface: rgba(28, 28, 30, 0.8);
             --text: #f5f5f7;
             --text-sec: #a1a1a6;
-            --border: #38383a;
+            --accent: rgba(0, 113, 227, 0.2);
+            --border: rgba(255, 255, 255, 0.15);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
         
-        html, body {
-            height: 100vh;
-            font-family: -apple-system, system-ui, sans-serif;
+        body {
             background-color: var(--bg);
             color: var(--text);
-            transition: background 0.3s;
-            overflow: hidden; /* Locks the main window */
+            font-family: "SF Pro Display", -apple-system, sans-serif;
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
         }
 
-        /* --- Navigation --- */
+        /* --- Glassmorphic Navigation --- */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 5%;
-            background: var(--bg);
-            border-bottom: 1px solid var(--border);
-            height: 70px;
-            z-index: 1000;
-            position: relative;
-        }
-
-        .logo { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
-
-        .nav-links { display: flex; gap: 5px; }
-
-        .nav-links button {
-            background: none;
-            border: none;
-            color: var(--text-sec);
-            font-weight: 600;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-
-        .nav-links button.active-btn { color: var(--primary); background: var(--surface); }
-
-        /* --- Content Container --- */
-        #content-wrapper {
-            height: calc(100vh - 70px);
-            width: 100%;
-            position: relative;
-        }
-
-        .page { 
-            display: none; 
-            height: 100%;
-            width: 100%;
-            overflow-y: auto; /* Allows scrolling inside the shop and other pages */
-            padding: 40px 20px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .page.active { display: block !important; }
-
-        /* --- Home Page Specific (Hero only, no scroll) --- */
-        #home {
-            overflow: hidden !important; 
-            display: none; 
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0;
-        }
-        #home.active { display: flex !important; }
-
-        .hero-image {
-            width: 85%;
-            max-width: 800px;
-            height: 45vh;
             background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 20px;
-            color: var(--text-sec);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--border);
+            height: 52px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        /* --- Shop Styling --- */
+        .logo { font-weight: 700; font-size: 14px; letter-spacing: 0.5px; color: var(--text); }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links button {
+            background: none; border: none; color: var(--text);
+            font-size: 12px; cursor: pointer; transition: 0.3s;
+        }
+        .nav-links button:hover { color: var(--primary); }
+
+        /* --- Hero Section --- */
+        .hero {
+            text-align: center;
+            padding: 100px 20px 60px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 { font-size: 56px; font-weight: 600; letter-spacing: -2px; }
+        .hero p { font-size: 24px; color: var(--text-sec); margin-top: 10px; }
+
+        /* --- Product Grid --- */
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-            gap: 20px; 
-            max-width: 1200px; 
-            margin: 20px auto;
-            padding-bottom: 100px; /* Space at the bottom of the scroll */
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 25px; 
+            padding: 40px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
         .card {
             background: var(--surface);
             border-radius: var(--radius);
-            padding: 15px;
-            text-align: center;
+            padding: 30px;
             border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        .img-placeholder {
-            width: 100%;
-            aspect-ratio: 1;
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
             background: var(--bg);
-            border-radius: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            color: var(--text-sec);
         }
 
-        .btn-action {
+        .img-wrap {
+            width: 100%; aspect-ratio: 1;
+            background: var(--accent);
+            border-radius: 14px;
+            margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 48px;
+        }
+
+        .price { font-size: 17px; color: var(--text-sec); margin-bottom: 20px; font-weight: 500;}
+
+        .btn-buy {
             background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px;
-            width: 100%;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.1s;
+            color: white; border: none;
+            padding: 10px 0; border-radius: 20px;
+            font-weight: 500; cursor: pointer;
+            transition: 0.2s;
         }
 
-        .btn-action:active { transform: scale(0.96); }
+        /* --- Modals & Content Pages --- */
+        .page { display: none; padding: 40px 5%; }
+        .page.active { display: block; animation: fadeIn 0.8s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .theme-toggle { cursor: pointer; border: none; background: none; font-size: 1.2rem; margin-left: 10px;}
-
-        /* --- Cart Item Style --- */
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid var(--border);
-        }
-        .remove-btn { color: #ff3b30; cursor: pointer; background: none; border: none; font-weight: 600; }
+        .theme-toggle { cursor: pointer; border: none; background: none; font-size: 18px; }
     </style>
 </head>
 <body>
@@ -174,146 +129,90 @@
     <nav>
         <div class="logo">3D PRINT DREAMS</div>
         <div class="nav-links">
-            <button onclick="showPage('home')" id="nav-home" class="active-btn">Home</button>
-            <button onclick="showPage('shop')" id="nav-shop">Shop</button>
-            <button onclick="showPage('about')" id="nav-about">About</button>
-            <button onclick="showPage('contact')" id="nav-contact">Contact</button>
-            <button onclick="showPage('donate')" id="nav-donate">Donate</button>
-            <button onclick="showPage('cart')" id="nav-cart">Cart (<span id="cart-qty">0</span>)</button>
+            <button onclick="showPage('home')">Store</button>
+            <button onclick="showPage('about')">Our Story</button>
+            <button onclick="showPage('cart')">Bag (<span id="cart-qty">0</span>)</button>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
         </div>
-        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
     </nav>
 
-    <div id="content-wrapper">
-        <section id="home" class="page active">
-            <h1 style="font-size: 2.5rem; letter-spacing: -1.5px;">3D Print Dreams</h1>
-            <p style="color: var(--text-sec); font-size: 1.1rem; margin-top: 10px;">Hand-crafted 3D mechanical fidgets.</p>
-            <div class="hero-image">Workshop Hero Image</div>
+    <div id="home" class="page active">
+        <section class="hero">
+            <h1>Engineered Satisfaction.</h1>
+            <p>Mechanical fidgets crafted with industrial precision.</p>
         </section>
+        
+        <div class="grid" id="product-grid"></div>
+    </div>
 
-        <section id="shop" class="page">
-            <div style="max-width: 1200px; margin: 0 auto;">
-                <h2 style="font-size: 1.8rem; margin-bottom: 10px;">The Collection</h2>
-                <p style="color: var(--text-sec); margin-bottom: 30px;">20 Exclusive Designs</p>
-                <div class="grid" id="product-grid">
-                    </div>
-            </div>
-        </section>
+    <div id="about" class="page">
+        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+            <h2 style="font-size: 42px; margin-bottom: 20px;">Filament to Function.</h2>
+            <p style="color: var(--text-sec); line-height: 1.6; font-size: 18px;">
+                We are two creators obsessed with the tactile feel of a perfect gear mesh. No mass production. Just real mechanical toys printed in high-grade PLA.
+            </p>
+        </div>
+    </div>
 
-        <section id="about" class="page">
-            <div style="max-width: 600px; margin: 0 auto; text-align: center;">
-                <h2>About the Team</h2>
-                <p style="margin: 20px 0; line-height: 1.6;">We are two friends turning filament into mechanical art. No mass-market sleekness, just real tools and toys made by hand.</p>
-                <div class="hero-image" style="height: 250px; width: 100%;">Team Photo</div>
-            </div>
-        </section>
-
-        <section id="contact" class="page">
-            <div class="card" style="max-width: 500px; margin: 20px auto;">
-                <h2>Get in Touch</h2>
-                <p style="margin: 20px 0;"><b>Email:</b> hello@3dprintdreams.com</p>
-                <p style="color: var(--text-sec);">Drop us a line for custom colors or bulk orders.</p>
-            </div>
-        </section>
-
-        <section id="donate" class="page">
-            <div class="card" style="max-width: 500px; margin: 20px auto; text-align: center;">
-                <h2>Support the Lab</h2>
-                <p style="margin-bottom: 25px;">Support helps us upgrade to Carbon Fiber and specialized nozzles.</p>
-                <button class="btn-action" onclick="window.open('https://paypal.com', '_blank')">Donate via PayPal</button>
-            </div>
-        </section>
-
-        <section id="cart" class="page">
-            <div class="card" style="max-width: 600px; margin: 0 auto;">
-                <h2 style="margin-bottom: 20px;">Your Shopping Bag</h2>
-                <div id="cart-display" style="color: var(--text-sec); text-align: center; padding: 20px;">Your cart is empty.</div>
-                <div id="cart-items-list"></div>
-                <button class="btn-action" id="checkout-btn" style="margin-top: 20px;" disabled onclick="alert('Checkout integration coming soon!')">Proceed to Checkout</button>
-            </div>
-        </section>
+    <div id="cart" class="page">
+        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+            <h2 style="font-size: 32px; margin-bottom: 10px;">Your Bag</h2>
+            <p style="color: var(--text-sec); margin-bottom: 30px;" id="cart-status">Your bag is currently empty.</p>
+            <button class="btn-buy" style="padding: 10px 40px;" onclick="showPage('home')">Back to Shop</button>
+        </div>
     </div>
 
     <script>
-        let cart = [];
-
-        // 1. Generate 20 Products for the Shop
-        const productNames = [
-            "Infinity Spinner", "Gear Cube", "Clicky Toggle", "Articulated Dragon", 
-            "Mechanical Key", "Gravity Bolt", "Pocket Turbine", "Magnetic Slider",
-            "Hex Link", "Orbit Ring", "Gryo Sphere", "Carbon Fidget",
-            "Steampunk Cog", "Nano Bot", "Stress Plate", "Nozzle Clicker",
-            "Filament Coil", "Spring Box", "Rotor Toy", "Spur Gear"
+        const inventory = [
+            { name: "Infinite Hexagon", price: 22, icon: "💠", desc: "Mindful meditation tool." },
+            { name: "Kinetic Gear Ring", price: 18, icon: "💍", desc: "Smooth rotation for focus." },
+            { name: "Gravity Cube", price: 34, icon: "🧊", desc: "Weight-balanced fidget." },
+            { name: "V3 Vortex Spiral", price: 26, icon: "🌀", desc: "Captivating optical spiral." },
+            { name: "Mechanical Clicker", price: 15, icon: "⌨️", desc: "Satisfying switch feedback." }
         ];
 
-        const grid = document.getElementById('product-grid');
-        productNames.forEach((name, i) => {
-            const price = (10 + (i % 5) * 5).toFixed(2);
-            grid.innerHTML += `
-                <div class="card">
-                    <div class="img-placeholder">Product #${i+1} Photo</div>
-                    <div style="margin-bottom:15px;">
-                        <h3 style="font-size:1rem;">${name}</h3>
-                        <p style="color:var(--text-sec); font-size:0.9rem;">$${price}</p>
+        function loadProducts() {
+            const grid = document.getElementById('product-grid');
+            // Populate grid with unique versions
+            for (let i = 0; i < 15; i++) {
+                const item = inventory[i % inventory.length];
+                grid.innerHTML += `
+                    <div class="card">
+                        <div class="img-wrap">${item.icon}</div>
+                        <div>
+                            <h3 style="font-size: 20px;">${item.name}</h3>
+                            <p style="color: var(--text-sec); font-size: 14px; margin-top: 5px;">${item.desc}</p>
+                        </div>
+                        <div style="margin-top: 25px;">
+                            <div class="price">$${item.price}.00</div>
+                            <button class="btn-buy" style="width: 100%" onclick="updateCart()">Add to Bag</button>
+                        </div>
                     </div>
-                    <button class="btn-action" onclick="addToCart('${name}', '${price}')">Add to Cart</button>
-                </div>
-            `;
-        });
-
-        // 2. Navigation Logic
-        function showPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            // Show target page
-            document.getElementById(pageId).classList.add('active');
-            // Update nav buttons
-            document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active-btn'));
-            document.getElementById('nav-' + pageId).classList.add('active-btn');
-            // Reset scroll to top
-            document.getElementById(pageId).scrollTop = 0;
-        }
-
-        // 3. Theme Logic
-        function toggleTheme() {
-            const root = document.documentElement;
-            const current = root.getAttribute('data-theme');
-            root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-        }
-
-        // 4. Cart Logic
-        function addToCart(name, price) {
-            cart.push({ name, price });
-            document.getElementById('cart-qty').innerText = cart.length;
-            updateCartDisplay();
-        }
-
-        function removeItem(index) {
-            cart.splice(index, 1);
-            document.getElementById('cart-qty').innerText = cart.length;
-            updateCartDisplay();
-        }
-
-        function updateCartDisplay() {
-            const emptyMsg = document.getElementById('cart-display');
-            const list = document.getElementById('cart-items-list');
-            const btn = document.getElementById('checkout-btn');
-
-            if (cart.length > 0) {
-                emptyMsg.style.display = 'none';
-                list.innerHTML = cart.map((item, idx) => `
-                    <div class="cart-item">
-                        <span>📦 ${item.name} - $${item.price}</span>
-                        <button class="remove-btn" onclick="removeItem(${idx})">Remove</button>
-                    </div>
-                `).join('');
-                btn.disabled = false;
-            } else {
-                emptyMsg.style.display = 'block';
-                list.innerHTML = '';
-                btn.disabled = true;
+                `;
             }
         }
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const current = body.getAttribute('data-theme');
+            body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        }
+
+        let cartCount = 0;
+        function updateCart() {
+            cartCount++;
+            document.getElementById('cart-qty').innerText = cartCount;
+            document.getElementById('cart-status').innerText = `You have ${cartCount} items ready for checkout.`;
+        }
+
+        loadProducts();
     </script>
 </body>
 </html>
+
